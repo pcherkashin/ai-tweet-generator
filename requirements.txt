@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+openai
+supabase
+python-dotenv
+streamlit
+requests
+beautifulsoup4
+tweepy
+pyOpenSSL
