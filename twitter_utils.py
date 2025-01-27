@@ -26,8 +26,6 @@ def get_twitter_client():
     
     try:
         # Initialize Twitter client with OAuth 1.0a
-        auth = tweepy.OAuthHandler(api_key, api_secret)
-        auth.set_access_token(access_token, access_token_secret)
         client = tweepy.Client(
             consumer_key=api_key,
             consumer_secret=api_secret,
@@ -70,31 +68,31 @@ def post_tweet(tweet_text: str, session_id: str) -> dict:
         # Post tweet
         response = client.create_tweet(text=tweet_text)
         
-        if not response or not response.data:
-            raise Exception("No response data received from Twitter API")
-        
-        tweet_id = response.data["id"]
-        tweet_url = f"https://twitter.com/user/status/{tweet_id}"
-        
-        # Log successful tweet
-        log_message_to_supabase(
-            session_id=session_id,
-            message_type="system",
-            content="Tweet posted successfully",
-            metadata={
+        if response and response.data:
+            tweet_id = response.data["id"]
+            tweet_url = f"https://twitter.com/user/status/{tweet_id}"
+            
+            # Log successful tweet
+            log_message_to_supabase(
+                session_id=session_id,
+                message_type="system",
+                content="Tweet posted successfully",
+                metadata={
+                    "tweet_id": tweet_id,
+                    "tweet_url": tweet_url,
+                    "tweet_text": tweet_text
+                }
+            )
+            
+            return {
+                "success": True,
                 "tweet_id": tweet_id,
                 "tweet_url": tweet_url,
                 "tweet_text": tweet_text
             }
-        )
-        
-        return {
-            "success": True,
-            "tweet_id": tweet_id,
-            "tweet_url": tweet_url,
-            "tweet_text": tweet_text
-        }
-        
+        else:
+            raise Exception("No response data received from Twitter API")
+            
     except Exception as e:
         error_message = f"Error posting tweet: {str(e)}"
         # Log error with detailed information
