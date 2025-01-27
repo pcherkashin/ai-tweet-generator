@@ -1,10 +1,16 @@
-```markdown
+Here's an enhanced version of your README.md for GitHub, incorporating better formatting, additional sections, and improved readability:
+
+````markdown
 # AI-Driven Tweet Generator
 
 ## Overview
+
 This repository hosts an **AI-driven application** designed to streamline the process of generating engaging Twitter drafts. The application integrates **voice input**, **search results from Brave API**, **content analysis using Crawl4AI**, and **OpenAI GPT-4** to create concise, impactful tweets. Users can choose their preferred draft and optionally post it directly to Twitter.
 
+---
+
 ## Features
+
 - **Voice Input with Speech Recognition**: Transcribe user voice commands into text.
 - **Text Input Option**: For users who prefer manual text entry.
 - **Article Search**: Fetch relevant articles using Brave API based on user queries.
@@ -16,14 +22,18 @@ This repository hosts an **AI-driven application** designed to streamline the pr
 ---
 
 ## Tech Stack
+
 ### Backend:
+
 - **FastAPI**: RESTful API backend.
 - **Supabase**: Real-time database for logging and user interaction storage.
 
 ### Frontend:
+
 - **Streamlit**: User-friendly interface for managing inputs, processing, and results.
 
 ### Libraries & APIs:
+
 - **OpenAI Whisper**: For audio-to-text transcription.
 - **SpeechRecognition**: For capturing voice input via microphone.
 - **Brave API**: For web article searches.
@@ -35,6 +45,7 @@ This repository hosts an **AI-driven application** designed to streamline the pr
 ## Installation
 
 ### Prerequisites
+
 - Python 3.12 or higher
 - Access to required API keys:
   - OpenAI API Key
@@ -43,20 +54,27 @@ This repository hosts an **AI-driven application** designed to streamline the pr
   - Supabase credentials
 
 ### Steps
+
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/ai-tweet-generator.git
+   git clone https://github.com/pcherkashin/ai-tweet-generator.git
    cd ai-tweet-generator
    ```
+````
+
 2. Set up a virtual environment:
+
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
+
 3. Install dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
+
 4. Create a `.env` file and configure API keys. Use `.env.example` as a template:
    ```bash
    cp .env.example .env
@@ -67,20 +85,26 @@ This repository hosts an **AI-driven application** designed to streamline the pr
 ## Usage
 
 ### Running the App
+
 1. Start the FastAPI backend:
+
    ```bash
    uvicorn main:app --reload
    ```
+
 2. Launch the Streamlit frontend:
+
    ```bash
    streamlit run streamlit_app.py
    ```
+
 3. Open the Streamlit interface in your browser:
    ```
    http://localhost:8501
    ```
 
 ### Workflow
+
 1. Select **voice** or **text** input.
 2. Enter or record your query (e.g., "Create a tweet about AI technology").
 3. Generate drafts:
@@ -94,6 +118,7 @@ This repository hosts an **AI-driven application** designed to streamline the pr
 ---
 
 ## File Structure
+
 ```
 .
 ├── .env.example          # Environment variable template
@@ -112,6 +137,7 @@ This repository hosts an **AI-driven application** designed to streamline the pr
 ---
 
 ## Environment Variables
+
 Configure these variables in the `.env` file:
 
 ```plaintext
@@ -137,25 +163,33 @@ SUPABASE_KEY=your_supabase_key
 ## Key Components
 
 ### 1. **Brave API**
+
 Fetches up to 5 articles based on the user query. Results include:
+
 - Article titles
 - URLs
 - Summaries
 
 ### 2. **Crawl4AI**
+
 Crawls the URLs returned by the Brave API to extract and clean the main content.
 
 ### 3. **OpenAI GPT-4**
+
 Generates three Twitter drafts based on the content crawled. Each draft contains:
+
 - Catchy hook
 - Insight or question
 - Call-to-action (CTA)
 
 ### 4. **Supabase Logging**
+
 Logs all user requests, responses, and interactions into the `messages` table for analysis.
 
 ### 5. **Streamlit Frontend**
+
 Provides a simple interface for:
+
 - Managing input (voice or text)
 - Displaying drafts
 - Selecting and posting tweets
@@ -163,12 +197,14 @@ Provides a simple interface for:
 ---
 
 ## Testing
+
 - **Unit Testing**: Use test scripts like `test_openai_generation.py` to validate OpenAI integrations.
 - **Twitter Integration**: Test posting functionality with `test_twitter_post.py`.
 
 ---
 
 ## Future Enhancements
+
 - Add more personalization to drafts using user profile data.
 - Extend to other social media platforms like LinkedIn and Instagram.
 - Improve UI for better accessibility and aesthetics.
@@ -176,12 +212,21 @@ Provides a simple interface for:
 ---
 
 ## License
+
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 ## Support
+
 If you encounter any issues, feel free to open an issue or contact the contributors.
 
 Happy Tweeting! 🚀
+
+---
+
+![Contributors](https://contrib.rocks/image?repo=pcherkashin/ai-tweet-generator) <!-- Replace with actual contributor badge if applicable -->
+
+```
+
 ```
