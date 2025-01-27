@@ -1,6 +1,7 @@
 import os
 import json
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -29,12 +30,27 @@ except Exception as e:
 # Initialize FastAPI app
 app = FastAPI()
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For development. In production, specify ["https://studio.ottomator.ai"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # Models
 class MessageRequest(BaseModel):
     session_id: str
     content: str
 
+class Agent0Request(BaseModel):
+    query: str
+    user_id: str
+    request_id: str
+    session_id: str
+    files: list = []
 
 # Endpoints
 @app.get("/")
@@ -193,5 +209,73 @@ async def process_request(session_id: str, user_input: str):
             metadata={"source": "process_request"}
         )
         raise HTTPException(status_code=500, detail=f"Error processing request: {e}")
-    
-    
+
+
+@app.post("/api/tweet-gen")
+async def tweet_gen(request: Agent0Request):
+    """
+    Agent0 Studio compatible endpoint for tweet generation.
+    Accepts POST requests with user query and session information.
+    Generates tweet drafts and stores them in the database.
+    Returns a simple success/failure response.
+    """
+    try:
+        # Store incoming user message
+        user_message = {
+            "type": "human",
+            "content": request.query
+        }
+        supabase.table("messages").insert({
+            "session_id": request.session_id,
+            "message": json.dumps(user_message)
+        }).execute()
+
+        # Process the request and generate tweet drafts
+        articles = fetch_articles_from_brave(request.query, request.session_id)
+        drafts = generate_twitter_drafts(articles, request.session_id)
+
+        # Format drafts for display
+        formatted_drafts = []
+        for i, draft in enumerate(drafts, 1):
+            formatted_draft = f"Draft {i}:\n{draft['text']}\n---"
+            formatted_drafts.append(formatted_draft)
+
+        # Store AI response with tweet drafts
+        ai_message = {
+            "type": "ai",
+            "content": "\n\n".join(formatted_drafts),
+            "data": {
+                "drafts": drafts,
+                "request_id": request.request_id,
+                "user_id": request.user_id,
+                "metadata": {
+                    "articles_count": len(articles),
+                    "drafts_count": len(drafts)
+                }
+            }
+        }
+        supabase.table("messages").insert({
+            "session_id": request.session_id,
+            "message": json.dumps(ai_message)
+        }).execute()
+
+        return {"success": True}
+        
+    except Exception as e:
+        # Log error and store error message
+        print(f"Error in tweet_gen endpoint: {str(e)}")
+        error_message = {
+            "type": "error",
+            "content": f"Error generating tweets: {str(e)}",
+            "data": {
+                "error_type": type(e).__name__,
+                "request_id": request.request_id,
+                "user_id": request.user_id
+            }
+        }
+        supabase.table("messages").insert({
+            "session_id": request.session_id,
+            "message": json.dumps(error_message)
+        }).execute()
+        
+        return {"success": False}

@@ -5,7 +5,7 @@ Here's an enhanced version of your README.md for GitHub, incorporating better fo
 
 ## Overview
 
-This repository hosts an **AI-driven application** designed to streamline the process of generating engaging Twitter drafts. The application integrates **voice input**, **search results from Brave API**, **content analysis using Crawl4AI**, and **OpenAI GPT-4** to create concise, impactful tweets. Users can choose their preferred draft and optionally post it directly to Twitter.
+This repository hosts an **AI-driven Tweet Generator** designed to streamline the process of generating engaging Twitter drafts. The application integrates **voice input**, **search results from Brave API**, **content analysis using Crawl4AI**, and **OpenAI GPT-4** to create concise, impactful tweets. Users can choose their preferred draft and optionally post it directly to Twitter.
 
 ---
 
@@ -159,6 +159,74 @@ SUPABASE_KEY=your_supabase_key
 ```
 
 ---
+
+## Agent0 Studio Integration
+
+### API Endpoint
+
+The application provides an Agent0 Studio compatible endpoint at `/api/tweet-gen` that accepts POST requests with the following structure:
+
+```json
+{
+  "query": "User's input text",
+  "user_id": "Unique user identifier",
+  "request_id": "Unique request identifier",
+  "session_id": "Conversation session identifier",
+  "files": []
+}
+```
+
+The endpoint returns a simple success/failure response:
+```json
+{
+  "success": true
+}
+```
+
+All conversation history and generated content is stored in the Supabase messages table.
+
+### Database Setup
+
+1. Create the required database table and enable realtime updates by running the SQL commands in `setup_database.sql`:
+   ```sql
+   -- Enable pgcrypto for UUID generation
+   CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+   -- Create messages table
+   CREATE TABLE messages (
+       id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+       session_id TEXT NOT NULL,
+       message JSONB NOT NULL
+   );
+
+   -- Create indexes
+   CREATE INDEX idx_messages_session_id ON messages(session_id);
+   CREATE INDEX idx_messages_created_at ON messages(created_at);
+
+   -- Enable realtime updates
+   alter publication supabase_realtime add table messages;
+   ```
+
+2. The messages table stores all interactions with the following structure:
+   - For user messages:
+     ```json
+     {
+       "type": "human",
+       "content": "User's input text"
+     }
+     ```
+   - For agent responses:
+     ```json
+     {
+       "type": "ai",
+       "content": "Agent's response text",
+       "data": {
+         "drafts": [...],
+         "articles": [...]
+       }
+     }
+     ```
 
 ## Key Components
 
