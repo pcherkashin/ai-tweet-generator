@@ -7,13 +7,13 @@ from crawler_utils import crawl_articles
 from openai_api import generate_twitter_drafts
 from supabase_utils import log_message_to_supabase
 
-# Optional Twitter import
-TWITTER_ENABLED = False
+# Twitter import
 try:
     from twitter_utils import post_tweet
     TWITTER_ENABLED = True
-except ImportError:
-    st.warning("⚠️ Twitter integration is disabled. Install tweepy package to enable posting.")
+except ImportError as e:
+    st.error(f"⚠️ Error importing Twitter module: {str(e)}")
+    TWITTER_ENABLED = False
 
 # Initialize session state
 if 'session_id' not in st.session_state:
@@ -176,11 +176,19 @@ if st.session_state.transcribed_text:
                             os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
                         ])
 
-                        if twitter_creds:
+                        if not twitter_creds:
+                            missing_creds = []
+                            if not os.getenv("TWITTER_API_KEY"): missing_creds.append("TWITTER_API_KEY")
+                            if not os.getenv("TWITTER_API_SECRET"): missing_creds.append("TWITTER_API_SECRET")
+                            if not os.getenv("TWITTER_ACCESS_TOKEN"): missing_creds.append("TWITTER_ACCESS_TOKEN")
+                            if not os.getenv("TWITTER_ACCESS_TOKEN_SECRET"): missing_creds.append("TWITTER_ACCESS_TOKEN_SECRET")
+                            st.error(f"❌ Missing Twitter credentials: {', '.join(missing_creds)}")
+                            st.info("Please add these credentials to your .env file. See .env.example for instructions.")
+                        else:
                             try:
                                 with st.spinner("🐦 Posting to Twitter (X)..."):
                                     result = post_tweet(
-                                        selected_tweet['text'], 
+                                        selected_tweet['text'],
                                         st.session_state.session_id
                                     )
                                     
@@ -189,10 +197,8 @@ if st.session_state.transcribed_text:
                                         st.write(f"🔗 Tweet URL: {result['tweet_url']}")
                             except Exception as e:
                                 st.error(f"❌ Error posting tweet: {str(e)}")
-                        else:
-                            st.error("❌ Twitter credentials missing. Check .env file.")
                     else:
-                        st.warning("⚠️ Twitter posting is disabled. Install tweepy package to enable posting.")
+                        st.error("⚠️ Twitter integration is not enabled. Please check if tweepy is installed correctly.")
                         st.info("Selected tweet text (copy to post manually):")
                         st.code(selected_tweet["text"])
                     

@@ -95,7 +95,7 @@ This repository hosts an **AI-driven application** designed to streamline the pr
 2. Launch the Streamlit frontend:
 
    ```bash
-   streamlit run streamlit_app.py
+   source venv/bin/activate && streamlit run streamlit_app.py
    ```
 
 3. Open the Streamlit interface in your browser:
