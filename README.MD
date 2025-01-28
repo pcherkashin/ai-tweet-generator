@@ -1,6 +1,3 @@
-Here's an enhanced version of your README.md for GitHub, incorporating better formatting, additional sections, and improved readability:
-
-````markdown
 # AI-Driven Tweet Generator
 
 ## Overview
@@ -290,10 +287,6 @@ This project is licensed under the [MIT License](LICENSE).
 If you encounter any issues, feel free to open an issue or contact the contributors.
 
 Happy Tweeting! 🚀
-
----
-
-![Contributors](https://contrib.rocks/image?repo=pcherkashin/ai-tweet-generator) <!-- Replace with actual contributor badge if applicable -->
 
 ```
 
