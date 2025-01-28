@@ -290,7 +290,3 @@ This project is licensed under the [MIT License](LICENSE).
 If you encounter any issues, feel free to open an issue or contact the contributors.
 
 Happy Tweeting! 🚀
-
-```
-
-```
