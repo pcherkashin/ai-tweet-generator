@@ -53,29 +53,30 @@ This repository hosts an **AI-driven Tweet Generator** designed to streamline th
 ### Steps
 
 1. Clone the repository:
-   ```bash
+
+```bash
    git clone https://github.com/pcherkashin/ai-tweet-generator.git
    cd ai-tweet-generator
-   ```
-````
+```
 
 2. Set up a virtual environment:
 
-   ```bash
+```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+```
 
 3. Install dependencies:
 
-   ```bash
+```bash
    pip install -r requirements.txt
-   ```
+```
 
 4. Create a `.env` file and configure API keys. Use `.env.example` as a template:
-   ```bash
+
+```bash
    cp .env.example .env
-   ```
+```
 
 ---
 
@@ -85,20 +86,21 @@ This repository hosts an **AI-driven Tweet Generator** designed to streamline th
 
 1. Start the FastAPI backend:
 
-   ```bash
+```bash
    uvicorn main:app --reload
-   ```
+```
 
 2. Launch the Streamlit frontend:
 
-   ```bash
+```bash
    source venv/bin/activate && streamlit run streamlit_app.py
-   ```
+```
 
 3. Open the Streamlit interface in your browser:
-   ```
+   
+```
    http://localhost:8501
-   ```
+```
 
 ### Workflow
 
@@ -138,6 +140,7 @@ This repository hosts an **AI-driven Tweet Generator** designed to streamline th
 Configure these variables in the `.env` file:
 
 ```plaintext
+
 # OpenAI API Configuration
 OPENAI_API_KEY=your_openai_api_key_here
 
